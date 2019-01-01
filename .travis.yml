@@ -16,5 +16,7 @@ cache:
 
 jobs:
   include:
+    - stage: lint
+      script: ./gradlew detekt
     - stage: test
       script: ./gradlew test
