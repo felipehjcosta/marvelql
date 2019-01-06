@@ -23,6 +23,8 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JSON
 import java.util.*
 
+const val MILLISECONDS = 1000L
+
 fun Application.module() {
     val schema = KGraphQL.schema {
         query("characters") {
@@ -49,7 +51,8 @@ fun Application.module() {
 }
 
 private suspend fun fetchCharacters(): List<Character>? {
-    val localTimestamp = (Calendar.getInstance(TimeZone.getTimeZone("UTC")).timeInMillis / 1000L).toString()
+    val localTimestamp = (Calendar.getInstance(TimeZone.getTimeZone("UTC")).timeInMillis / MILLISECONDS)
+        .toString()
     val hashSignature = generateHash(localTimestamp)
 
     val client = HttpClient(Apache) {
@@ -85,7 +88,8 @@ private fun String.toMD5(): String {
 data class CharacterDataWrapper(
     @kotlinx.serialization.Optional @SerialName("code") var code: Int = 0,
     @kotlinx.serialization.Optional @SerialName("status") var status: String = "",
-    @kotlinx.serialization.Optional @SerialName("data") var characterDataContainer: CharacterDataContainer = CharacterDataContainer()
+    @kotlinx.serialization.Optional @SerialName("data")
+    var characterDataContainer: CharacterDataContainer = CharacterDataContainer()
 )
 
 @Serializable
