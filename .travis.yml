@@ -20,3 +20,5 @@ jobs:
       script: ./gradlew detekt
     - stage: test
       script: ./gradlew test
+    - stage: integration test
+      script: ./gradlew integrationTest
