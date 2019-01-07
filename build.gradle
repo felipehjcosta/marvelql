@@ -9,6 +9,7 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
         classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:$detekt_version"
         classpath "org.unbroken-dome.gradle-plugins:gradle-testsets-plugin:$gradle_testsets_plugin"
+        classpath "com.github.jengelman.gradle.plugins:shadow:$shadow_jar_plugin"
     }
 }
 
@@ -17,10 +18,18 @@ apply plugin: 'kotlinx-serialization'
 apply plugin: 'application'
 apply plugin: "io.gitlab.arturbosch.detekt"
 apply plugin: "org.unbroken-dome.test-sets"
+apply plugin: 'com.github.johnrengelman.shadow'
 
 group 'marvelql'
 version '0.0.1'
 mainClassName = "io.ktor.server.netty.EngineMain"
+
+shadowJar {
+    archiveName = "$baseName.$extension"
+    manifest {
+        attributes 'Main-Class': mainClassName
+    }
+}
 
 testSets {
     integrationTest
