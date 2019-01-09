@@ -21,4 +21,4 @@ jobs:
     - stage: test
       script: ./gradlew test
     - stage: integration test
-      script: ./gradlew integrationTest
+      script: ./gradlew systemTest

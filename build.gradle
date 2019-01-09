@@ -34,27 +34,27 @@ shadowJar {
 }
 
 testSets {
-    integrationTest
+    systemTest
 }
 
 sourceSets {
     main.kotlin.srcDirs = main.java.srcDirs = ['src']
     test.kotlin.srcDirs = test.java.srcDirs = ['test']
-    integrationTest.kotlin.srcDirs = ['integrationTest']
+    systemTest.kotlin.srcDirs = ['systemTest']
     main.resources.srcDirs = ['resources']
     test.resources.srcDirs = ['testResources']
-    integrationTest.resources.srcDirs = ['integrationTestResources']
+    systemTest.resources.srcDirs = ['systemTestResources']
 }
 
 test {
     useJUnitPlatform()
 }
 
-integrationTest {
+systemTest {
     useJUnitPlatform()
 }
 
-check.dependsOn integrationTest
+check.dependsOn systemTest
 
 task createDockerfile(type: com.bmuschko.gradle.docker.tasks.image.Dockerfile) {
     destFile = project.file('build/docker/Dockerfile')
