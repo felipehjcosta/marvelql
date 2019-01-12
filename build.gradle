@@ -102,6 +102,7 @@ repositories {
     mavenLocal()
     jcenter()
     maven { url "https://kotlin.bintray.com/kotlinx" }
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
@@ -118,6 +119,12 @@ dependencies {
     testCompile "io.ktor:ktor-server-tests:$ktor_version"
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
+
+    systemTestImplementation "org.spekframework.spek2:spek-dsl-jvm:2.0.0-rc.1"
+    systemTestRuntimeOnly "org.spekframework.spek2:spek-runner-junit5:2.0.0-rc.1"
+    systemTestImplementation "com.github.kittinunf.fuel:fuel:1.12.0"
+    systemTestImplementation 'com.github.swordglowsblue:haven-json:1.1.2'
+    systemTestImplementation "com.willowtreeapps.assertk:assertk-jvm:0.12"
 }
 
 detekt {
