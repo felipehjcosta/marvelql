@@ -11,10 +11,14 @@ import io.ktor.client.features.json.serializer.KotlinxSerializer
 import io.ktor.client.request.get
 import io.ktor.client.request.url
 import io.ktor.features.ContentNegotiation
+import io.ktor.features.StatusPages
 import io.ktor.gson.gson
 import io.ktor.http.ContentType
+import io.ktor.http.HttpStatusCode
 import io.ktor.request.receiveText
+import io.ktor.response.respond
 import io.ktor.response.respondText
+import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.routing
 import kotlinx.coroutines.runBlocking
@@ -40,12 +44,20 @@ fun Application.module() {
     install(ContentNegotiation) {
         gson()
     }
+    install(StatusPages) {
+        exception<Throwable> {
+            call.respond(HttpStatusCode.InternalServerError)
+        }
+    }
     routing {
         post("/graphql") {
             val query = call.receiveText()
             println("the graphql query: $query")
 
             call.respondText(schema.execute(query), ContentType.Application.Json)
+        }
+        get("/health") {
+            call.respondText("OK")
         }
     }
 }
