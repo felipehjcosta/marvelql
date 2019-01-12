@@ -1,4 +1,9 @@
 language: java
+install: true
+sudo: required
+
+services:
+  - docker
 
 jdk:
   - oraclejdk8
@@ -20,5 +25,5 @@ jobs:
       script: ./gradlew detekt
     - stage: test
       script: ./gradlew test
-    - stage: integration test
+    - stage: system test
       script: ./gradlew systemTest

@@ -33,29 +33,6 @@ shadowJar {
     }
 }
 
-testSets {
-    systemTest
-}
-
-sourceSets {
-    main.kotlin.srcDirs = main.java.srcDirs = ['src']
-    test.kotlin.srcDirs = test.java.srcDirs = ['test']
-    systemTest.kotlin.srcDirs = ['systemTest']
-    main.resources.srcDirs = ['resources']
-    test.resources.srcDirs = ['testResources']
-    systemTest.resources.srcDirs = ['systemTestResources']
-}
-
-test {
-    useJUnitPlatform()
-}
-
-systemTest {
-    useJUnitPlatform()
-}
-
-check.dependsOn systemTest
-
 task createDockerfile(type: com.bmuschko.gradle.docker.tasks.image.Dockerfile) {
     destFile = project.file('build/docker/Dockerfile')
     from 'openjdk:8-jre-alpine'
@@ -86,6 +63,7 @@ task createContainer(type: com.bmuschko.gradle.docker.tasks.container.DockerCrea
     dependsOn buildImage
     targetImageId buildImage.getImageId()
     portBindings = ['8080:8080']
+    envVars = [MARVEL_PRIVATE_KEY: MARVEL_PRIVATE_KEY, MARVEL_PUBLIC_KEY: MARVEL_PUBLIC_KEY]
     autoRemove = true
 }
 
@@ -94,9 +72,55 @@ task startContainer(type: com.bmuschko.gradle.docker.tasks.container.DockerStart
     targetContainerId createContainer.getContainerId()
 }
 
+task startAndWaitContainer(type: com.bmuschko.gradle.docker.tasks.container.extras.DockerWaitHealthyContainer) {
+    dependsOn startContainer
+    awaitStatusTimeout = 60
+    targetContainerId createContainer.getContainerId()
+}
+
 task stopContainer(type: com.bmuschko.gradle.docker.tasks.container.DockerStopContainer) {
     targetContainerId createContainer.getContainerId()
 }
+
+task removeContainer(type: com.bmuschko.gradle.docker.tasks.container.DockerRemoveContainer) {
+    dependsOn stopContainer
+    targetContainerId startContainer.getContainerId()
+    force = true
+}
+
+task removeImage(type: com.bmuschko.gradle.docker.tasks.image.DockerRemoveImage) {
+    dependsOn removeContainer
+    targetImageId buildImage.getImageId()
+    force = true
+}
+
+testSets {
+    systemTest
+}
+
+sourceSets {
+    main.kotlin.srcDirs = main.java.srcDirs = ['src']
+    test.kotlin.srcDirs = test.java.srcDirs = ['test']
+    systemTest.kotlin.srcDirs = ['systemTest']
+    main.resources.srcDirs = ['resources']
+    test.resources.srcDirs = ['testResources']
+    systemTest.resources.srcDirs = ['systemTestResources']
+}
+
+test {
+    useJUnitPlatform()
+}
+
+systemTest {
+    useJUnitPlatform {
+        includeEngines 'spek2'
+    }
+
+    dependsOn startAndWaitContainer
+    finalizedBy stopContainer
+}
+
+check.dependsOn systemTest
 
 repositories {
     mavenLocal()
