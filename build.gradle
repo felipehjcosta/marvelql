@@ -162,6 +162,6 @@ detekt {
 }
 
 run.doFirst {
-    environment 'MARVEL_PUBLIC_KEY', marvelPublicKeyo
+    environment 'MARVEL_PUBLIC_KEY', marvelPublicKey
     environment 'MARVEL_PRIVATE_KEY', marvelPrivateKey
 }
