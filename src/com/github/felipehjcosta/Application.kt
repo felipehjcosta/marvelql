@@ -1,13 +1,12 @@
 package com.github.felipehjcosta
 
 import com.github.pgutkowski.kgraphql.KGraphQL
+import com.tripl3dogdare.havenjson.Json
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.apache.Apache
-import io.ktor.client.features.json.JsonFeature
-import io.ktor.client.features.json.serializer.KotlinxSerializer
 import io.ktor.client.request.get
 import io.ktor.client.request.url
 import io.ktor.features.ContentNegotiation
@@ -24,7 +23,6 @@ import io.ktor.routing.routing
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.JSON
 import java.util.*
 
 const val MILLISECONDS = 1000L
@@ -67,11 +65,7 @@ private suspend fun fetchCharacters(): List<Character>? {
         .toString()
     val hashSignature = generateHash(localTimestamp)
 
-    val client = HttpClient(Apache) {
-        install(JsonFeature) {
-            serializer = KotlinxSerializer(JSON.nonstrict)
-        }
-    }
+    val client = HttpClient(Apache)
 
     val url = "https://gateway.marvel.com:443/v1/public/characters?" +
             "limit=10" +
@@ -79,11 +73,14 @@ private suspend fun fetchCharacters(): List<Character>? {
             "&ts=${localTimestamp}" +
             "&apikey=${System.getenv("MARVEL_PUBLIC_KEY")}" +
             "&hash=${hashSignature}"
-    println("Make request to ${url}")
-    val response = client.get<CharacterDataWrapper> { url(url) }
+    val response = client.get<String> { url(url) }
     client.close()
 
-    return response?.characterDataContainer?.characters
+    return Json.parse(response).run {
+        this["data"]["results"].asList?.map {
+            Character(it["id"].asInt!!.toLong(), it["name"].asString!!, it["description"].asString!!)
+        }
+    }
 }
 
 private fun generateHash(timestamp: String): String {
@@ -95,23 +92,6 @@ private fun String.toMD5(): String {
     val digested = md.digest(toByteArray())
     return digested.joinToString("") { String.format("%02x", it) }
 }
-
-@Serializable
-data class CharacterDataWrapper(
-    @kotlinx.serialization.Optional @SerialName("code") var code: Int = 0,
-    @kotlinx.serialization.Optional @SerialName("status") var status: String = "",
-    @kotlinx.serialization.Optional @SerialName("data")
-    var characterDataContainer: CharacterDataContainer = CharacterDataContainer()
-)
-
-@Serializable
-class CharacterDataContainer(
-    @kotlinx.serialization.Optional @SerialName("offset") var offset: Int = 0,
-    @kotlinx.serialization.Optional @SerialName("limit") var limit: Int = 0,
-    @kotlinx.serialization.Optional @SerialName("total") var total: Int = 0,
-    @kotlinx.serialization.Optional @SerialName("count") var count: Int = 0,
-    @kotlinx.serialization.Optional @SerialName("results") var characters: List<Character> = emptyList()
-)
 
 @Serializable
 data class Character(
