@@ -27,7 +27,7 @@ version '0.0.1'
 mainClassName = "io.ktor.server.netty.EngineMain"
 
 def marvelPrivateKey = hasProperty('MARVEL_PRIVATE_KEY') ? MARVEL_PRIVATE_KEY : System.getenv('MARVEL_PRIVATE_KEY')
-def marvelPublicKey = hasProperty('MARVEL_PUBLIC_KEY') ? MARVEL_PRIVATE_KEY : System.getenv('MARVEL_PUBLIC_KEY')
+def marvelPublicKey = hasProperty('MARVEL_PUBLIC_KEY') ? MARVEL_PUBLIC_KEY : System.getenv('MARVEL_PUBLIC_KEY')
 
 shadowJar {
     archiveName = "$baseName.$extension"
