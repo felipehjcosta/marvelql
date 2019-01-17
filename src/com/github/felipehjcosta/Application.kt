@@ -1,3 +1,4 @@
+@file:Suppress("MatchingDeclarationName")
 package com.github.felipehjcosta
 
 import com.github.pgutkowski.kgraphql.KGraphQL
