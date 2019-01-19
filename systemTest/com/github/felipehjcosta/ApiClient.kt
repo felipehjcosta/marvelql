@@ -1,5 +1,6 @@
 package com.github.felipehjcosta
 
+import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.fuel.httpPost
 import com.tripl3dogdare.havenjson.Json
 
@@ -12,5 +13,13 @@ class ApiClient {
             .responseString()
 
         return Json.parse(result.get())
+    }
+
+    fun queryHealthCheck(): String {
+        val (_, _, result) = "${Environment.baseUrl}/health".httpGet()
+            .timeout(5000)
+            .responseString()
+
+        return result.get()
     }
 }
