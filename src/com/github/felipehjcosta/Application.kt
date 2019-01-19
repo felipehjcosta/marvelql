@@ -1,4 +1,5 @@
 @file:Suppress("MatchingDeclarationName")
+
 package com.github.felipehjcosta
 
 import com.github.pgutkowski.kgraphql.KGraphQL
@@ -22,8 +23,6 @@ import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.routing
 import kotlinx.coroutines.runBlocking
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
 import java.util.*
 
 const val MILLISECONDS = 1000L
@@ -94,23 +93,8 @@ private fun String.toMD5(): String {
     return digested.joinToString("") { String.format("%02x", it) }
 }
 
-@Serializable
 data class Character(
-    @kotlinx.serialization.Optional @SerialName("id") var id: Long = -1,
-    @kotlinx.serialization.Optional @SerialName("name") var name: String = "",
-    @kotlinx.serialization.Optional @SerialName("description") var description: String = ""
-) {
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other?.javaClass != javaClass) return false
-
-        other as Character
-
-        if (id != other.id) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int = id.toInt()
-}
+    var id: Long = -1,
+    var name: String = "",
+    var description: String = ""
+)
