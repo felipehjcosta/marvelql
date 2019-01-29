@@ -2,6 +2,7 @@
 
 package com.github.felipehjcosta
 
+import com.github.felipehjcosta.domain.MarvelCharacter
 import com.github.pgutkowski.kgraphql.KGraphQL
 import com.tripl3dogdare.havenjson.Json
 import io.ktor.application.Application
@@ -30,14 +31,14 @@ const val MILLISECONDS = 1000L
 fun Application.module() {
     val schema = KGraphQL.schema {
         query("characters") {
-            resolver<List<com.github.felipehjcosta.Character>> {
+            resolver<List<MarvelCharacter>> {
                 val response = runBlocking { fetchCharacters() }
                 println(">>> response: ${response}")
                 response ?: emptyList()
             }
         }
 
-        type<com.github.felipehjcosta.Character>()
+        type<MarvelCharacter>()
     }
     install(ContentNegotiation) {
         gson()
@@ -60,7 +61,7 @@ fun Application.module() {
     }
 }
 
-private suspend fun fetchCharacters(): List<Character>? {
+private suspend fun fetchCharacters(): List<MarvelCharacter>? {
     val localTimestamp = (Calendar.getInstance(TimeZone.getTimeZone("UTC")).timeInMillis / MILLISECONDS)
         .toString()
     val hashSignature = generateHash(localTimestamp)
@@ -78,7 +79,7 @@ private suspend fun fetchCharacters(): List<Character>? {
 
     return Json.parse(response).run {
         this["data"]["results"].asList?.map {
-            Character(it["id"].asInt!!.toLong(), it["name"].asString!!, it["description"].asString!!)
+            MarvelCharacter(it["id"].asInt!!.toLong(), it["name"].asString!!, it["description"].asString!!)
         }
     }
 }
@@ -92,9 +93,3 @@ private fun String.toMD5(): String {
     val digested = md.digest(toByteArray())
     return digested.joinToString("") { String.format("%02x", it) }
 }
-
-data class Character(
-    var id: Long = -1,
-    var name: String = "",
-    var description: String = ""
-)
