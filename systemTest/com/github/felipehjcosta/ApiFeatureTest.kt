@@ -1,6 +1,7 @@
 package com.github.felipehjcosta
 
-import assertk.assert
+import assertk.all
+import assertk.assertThat
 import assertk.assertions.hasSize
 import assertk.assertions.isNotNull
 import com.tripl3dogdare.havenjson.Json
@@ -18,9 +19,7 @@ object ApiFeatureTest : Spek({
             }
 
             Then("it should contains characters with default size") {
-                assert(result?.let { it["data"]["characters"].asList }).isNotNull {
-                    it.hasSize(10)
-                }
+                assertThat(result?.let { it["data"]["characters"].asList }).isNotNull().all { hasSize(10) }
             }
         }
 
