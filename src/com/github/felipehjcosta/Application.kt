@@ -3,6 +3,7 @@
 package com.github.felipehjcosta
 
 import com.github.felipehjcosta.adapters.infrastructure.RemoteCharactersRepository
+import com.github.felipehjcosta.application.QueryCharactersService
 import com.github.felipehjcosta.domain.MarvelCharacter
 import com.github.pgutkowski.kgraphql.KGraphQL
 import io.ktor.application.Application
@@ -30,10 +31,10 @@ fun Application.module() {
         query("characters") {
             resolver<List<MarvelCharacter>> {
                 val response = runBlocking {
-                    RemoteCharactersRepository(BASE_URL, PUBLIC_KEY, PRIVATE_KEY).fetchCharacters()
+                    QueryCharactersService(RemoteCharactersRepository(BASE_URL, PUBLIC_KEY, PRIVATE_KEY)).execute()
                 }
-                println(">>> response: ${response}")
-                response
+                println(">>> response: ${response.characters}")
+                response.characters
             }
         }
 
