@@ -16,10 +16,6 @@ import io.ktor.response.respond
 import kotlinx.coroutines.runBlocking
 import org.koin.ktor.ext.installKoin
 
-private const val BASE_URL = "https://gateway.marvel.com:443"
-private val publicKey = System.getenv("MARVEL_PUBLIC_KEY")
-private val privateKey = System.getenv("MARVEL_PRIVATE_KEY")
-
 fun Application.module() {
     install(ContentNegotiation) {
         gson()
@@ -29,13 +25,12 @@ fun Application.module() {
             call.respond(HttpStatusCode.InternalServerError)
         }
     }
+    val baseUrl = environment.config.property("ktor.marvel_gateway_url").getString()
+    val publicKey = environment.config.property("ktor.marvel_gateway_key.public").getString()
+    val privateKey = environment.config.property("ktor.marvel_gateway_key.private").getString()
     val module = org.koin.dsl.module {
         single<CharactersRepository> {
-            RemoteCharactersRepository(
-                BASE_URL,
-                publicKey,
-                privateKey
-            )
+            RemoteCharactersRepository(baseUrl, publicKey, privateKey)
         }
         single { QueryCharactersService(get()) }
         single {
