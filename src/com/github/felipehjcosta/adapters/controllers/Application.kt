@@ -1,6 +1,6 @@
 @file:Suppress("MatchingDeclarationName")
 
-package com.github.felipehjcosta
+package com.github.felipehjcosta.adapters.controllers
 
 import com.github.felipehjcosta.adapters.infrastructure.RemoteCharactersRepository
 import com.github.felipehjcosta.application.QueryCharactersService
@@ -40,7 +40,11 @@ fun Application.module() {
         }
     }
     val module = org.koin.dsl.module {
-        single<CharactersRepository> { RemoteCharactersRepository(BASE_URL, PUBLIC_KEY, PRIVATE_KEY) }
+        single<CharactersRepository> { RemoteCharactersRepository(
+            BASE_URL,
+            PUBLIC_KEY,
+            PRIVATE_KEY
+        ) }
         single { QueryCharactersService(get()) }
         single {
             KGraphQL.schema {
