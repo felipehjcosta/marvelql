@@ -1,6 +1,6 @@
 package com.github.felipehjcosta
 
-import assertk.assert
+import assertk.assertThat
 import assertk.assertions.isEqualTo
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.gherkin.Feature
@@ -16,7 +16,7 @@ object HealthCheckFeatureTest : Spek({
             }
 
             Then("it should contains OK") {
-                assert(result).isEqualTo("OK")
+                assertThat(result).isEqualTo("OK")
             }
         }
 
