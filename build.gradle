@@ -141,7 +141,7 @@ dependencies {
 
     implementation "io.ktor:ktor-client-apache:$ktor_version"
     implementation "io.ktor:ktor-client-json-jvm:$ktor_version"
-    implementation 'com.github.swordglowsblue:haven-json:1.1.2'
+    implementation "com.github.swordglowsblue:haven-json:$haven_json_version"
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:$kotlin_serialization_version"
 
     implementation "org.koin:koin-core:$koin_version"
@@ -149,18 +149,18 @@ dependencies {
     implementation "org.koin:koin-ktor:$koin_version"
 
     testImplementation "io.ktor:ktor-server-tests:$ktor_version"
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
-    testImplementation "org.spekframework.spek2:spek-dsl-jvm:2.0.0-rc.1"
-    testRuntimeOnly "org.spekframework.spek2:spek-runner-junit5:2.0.0-rc.1"
-    testImplementation "io.mockk:mockk:1.8.13.kotlin13"
-    testImplementation 'com.willowtreeapps.assertk:assertk-jvm:0.13'
-    testImplementation "com.squareup.okhttp3:mockwebserver:3.12.1"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$junit5_version"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit5_version"
+    testImplementation "org.spekframework.spek2:spek-dsl-jvm:$spek2_version"
+    testRuntimeOnly "org.spekframework.spek2:spek-runner-junit5:$spek2_version"
+    testImplementation "io.mockk:mockk:$mockk_version"
+    testImplementation "com.willowtreeapps.assertk:assertk-jvm:$assertk_version"
+    testImplementation "com.squareup.okhttp3:mockwebserver:$mockwebserver_version"
 
-    systemTestImplementation "org.spekframework.spek2:spek-dsl-jvm:2.0.0-rc.1"
-    systemTestRuntimeOnly "org.spekframework.spek2:spek-runner-junit5:2.0.0-rc.1"
-    systemTestImplementation "com.github.kittinunf.fuel:fuel:1.12.0"
-    systemTestImplementation "com.willowtreeapps.assertk:assertk-jvm:0.12"
+    systemTestImplementation "org.spekframework.spek2:spek-dsl-jvm:$spek2_version"
+    systemTestRuntimeOnly "org.spekframework.spek2:spek-runner-junit5:$spek2_version"
+    systemTestImplementation "com.github.kittinunf.fuel:fuel:$fuel_version"
+    systemTestImplementation "com.willowtreeapps.assertk:assertk-jvm:$assertk_version"
 }
 
 detekt {
