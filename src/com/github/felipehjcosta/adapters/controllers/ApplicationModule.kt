@@ -6,6 +6,9 @@ import com.github.felipehjcosta.domain.CharactersRepository
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
+import io.ktor.auth.Authentication
+import io.ktor.auth.UserIdPrincipal
+import io.ktor.auth.basic
 import io.ktor.features.ContentNegotiation
 import io.ktor.features.StatusPages
 import io.ktor.gson.gson
@@ -36,5 +39,17 @@ fun Application.module() {
     }
     installKoin {
         modules(module)
+    }
+    install(Authentication) {
+        basic {
+            realm = "ktor"
+            validate { credentials ->
+                if (credentials.name == credentials.password) {
+                    UserIdPrincipal(credentials.name)
+                } else {
+                    null
+                }
+            }
+        }
     }
 }
