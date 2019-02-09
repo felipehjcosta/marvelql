@@ -24,6 +24,6 @@ jobs:
     - stage: lint
       script: ./gradlew detekt
     - stage: test
-      script: ./gradlew test
+      script: ./gradlew test jacocoTestReport
     - stage: system test
       script: ./gradlew systemTest

@@ -21,6 +21,7 @@ apply plugin: "io.gitlab.arturbosch.detekt"
 apply plugin: "org.unbroken-dome.test-sets"
 apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: "com.bmuschko.docker-remote-api"
+apply plugin: "jacoco"
 
 group 'marvelql'
 version '0.0.1'
@@ -100,6 +101,19 @@ task removeImage(type: com.bmuschko.gradle.docker.tasks.image.DockerRemoveImage)
 testSets {
     systemTest
 }
+
+jacoco {
+    toolVersion = '0.8.2'
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        html.enabled true
+    }
+}
+
+check.dependsOn jacocoTestReport
 
 sourceSets {
     main.kotlin.srcDirs = main.java.srcDirs = ['src']
