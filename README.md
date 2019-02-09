@@ -1,8 +1,7 @@
 # MarvelQL
-[![Build Status](https://travis-ci.org/felipehjcosta/marvelql.svg?branch=master)](https://travis-ci.org/felipehjcosta/marvelql)
-A GraphQL API for [The Marvel Comics API](https://developer.marvel.com) made with [Kotlin](https://kotlinlang.org) and [Ktor](https://ktor.io). It's on early stage development.
+[![Build Status](https://travis-ci.org/felipehjcosta/marvelql.svg?branch=master)](https://travis-ci.org/felipehjcosta/marvelql) [![codecov](https://codecov.io/gh/felipehjcosta/marvelql/branch/master/graph/badge.svg)](https://codecov.io/gh/felipehjcosta/marvelql)
 
-[logo]: https://raw.githubusercontent.com/felipehjcosta/marvelql/master/logo.svg
+A GraphQL API for [The Marvel Comics API](https://developer.marvel.com) made with [Kotlin](https://kotlinlang.org) and [Ktor](https://ktor.io). It's on early stage development.
 
 Dependencies
 -------
