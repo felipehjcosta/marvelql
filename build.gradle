@@ -164,6 +164,7 @@ dependencies {
     implementation "org.koin:koin-ktor:$koin_version"
 
     testImplementation "io.ktor:ktor-server-tests:$ktor_version"
+    testCompile "org.koin:koin-test:$koin_version"
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junit5_version"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit5_version"
     testImplementation "org.spekframework.spek2:spek-dsl-jvm:$spek2_version"

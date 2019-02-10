@@ -2,7 +2,7 @@
 
 package com.github.felipehjcosta.adapters.controllers
 
-import com.github.pgutkowski.kgraphql.schema.Schema
+import com.github.felipehjcosta.application.QueryCharactersService
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.auth.authenticate
@@ -15,14 +15,14 @@ import io.ktor.routing.routing
 import org.koin.ktor.ext.inject
 
 fun Application.route() {
-    val schema: Schema by inject()
+    val service: QueryCharactersService by inject()
     routing {
         authenticate {
             post("/graphql") {
                 val query = call.receiveText()
                 println("the graphql query: $query")
 
-                call.respondText(schema.execute(query), ContentType.Application.Json)
+                call.respondText(createSchema(service).execute(query), ContentType.Application.Json)
             }
         }
         get("/health") {

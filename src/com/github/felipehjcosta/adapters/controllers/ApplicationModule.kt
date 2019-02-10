@@ -17,24 +17,24 @@ import io.ktor.response.respond
 import org.koin.ktor.ext.installKoin
 
 fun Application.module() {
+    val baseUrl = environment.config.property("ktor.marvel_gateway_url").getString()
+    val publicKey = environment.config.property("ktor.marvel_gateway_key.public").getString()
+    val privateKey = environment.config.property("ktor.marvel_gateway_key.private").getString()
+
+    val applicationModule = org.koin.dsl.module(createdAtStart = true) {
+        single<CharactersRepository> { RemoteCharactersRepository(baseUrl, publicKey, privateKey) }
+        single { QueryCharactersService(get()) }
+    }
+    moduleWithDependencies(applicationModule)
+}
+
+fun Application.moduleWithDependencies(module: org.koin.core.module.Module) {
     install(ContentNegotiation) {
         gson()
     }
     install(StatusPages) {
         exception<Throwable> {
             call.respond(HttpStatusCode.InternalServerError)
-        }
-    }
-    val baseUrl = environment.config.property("ktor.marvel_gateway_url").getString()
-    val publicKey = environment.config.property("ktor.marvel_gateway_key.public").getString()
-    val privateKey = environment.config.property("ktor.marvel_gateway_key.private").getString()
-    val module = org.koin.dsl.module {
-        single<CharactersRepository> {
-            RemoteCharactersRepository(baseUrl, publicKey, privateKey)
-        }
-        single { QueryCharactersService(get()) }
-        single {
-            createSchema(get())
         }
     }
     installKoin {
