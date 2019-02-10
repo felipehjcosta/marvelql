@@ -67,7 +67,7 @@ task createContainer(type: com.bmuschko.gradle.docker.tasks.container.DockerCrea
     dependsOn buildImage
     targetImageId buildImage.getImageId()
     portBindings = ['8080:8080']
-    envVars = [MARVEL_PRIVATE_KEY: marvelPrivateKey, MARVEL_PUBLIC_KEY: marvelPublicKey]
+    envVars = [MARVEL_PRIVATE_KEY: marvelPrivateKey, MARVEL_PUBLIC_KEY: marvelPublicKey, ENV: "prod"]
     autoRemove = true
 }
 

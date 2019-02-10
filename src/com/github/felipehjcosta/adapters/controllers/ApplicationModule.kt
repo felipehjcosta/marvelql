@@ -50,6 +50,10 @@ fun Application.moduleWithDependencies(module: org.koin.core.module.Module) {
                     null
                 }
             }
+            skipWhen { isDevelopmentEnvironment }
         }
     }
 }
+
+val Application.envKind get() = environment.config.property("ktor.environment").getString()
+val Application.isDevelopmentEnvironment get() = envKind == "dev"

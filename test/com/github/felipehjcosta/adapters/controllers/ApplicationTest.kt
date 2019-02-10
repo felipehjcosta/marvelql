@@ -7,6 +7,7 @@ import io.ktor.application.Application
 import io.ktor.config.MapApplicationConfig
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
+import io.ktor.server.testing.TestApplicationEngine
 import io.ktor.server.testing.handleRequest
 import io.ktor.server.testing.setBody
 import io.ktor.server.testing.withTestApplication
@@ -47,14 +48,34 @@ object ApplicationTest : Spek({
                     )
                 )
 
-                with(handleRequest(HttpMethod.Post, "graphql") {
-                    addHeader("Authorization", "Basic ${Base64.getEncoder().encodeToString("test:test".toByteArray())}")
-                    setBody("{ characters { id name }}")
-                }) {
+                context("in production environment") {
+                    forceProductionEnvironment()
 
-                    it("should respond 200") {
-                        assertEquals(HttpStatusCode.OK, response.status())
+                    with(handleRequest(HttpMethod.Post, "graphql") {
+                        addHeader(
+                            "Authorization",
+                            "Basic ${Base64.getEncoder().encodeToString("test:test".toByteArray())}"
+                        )
+                        setBody("{ characters { id name }}")
+                    }) {
 
+                        it("should respond 200") {
+                            assertEquals(HttpStatusCode.OK, response.status())
+
+                        }
+                    }
+                }
+
+                context("in development environment") {
+                    forceDevelpmentEnvironment()
+
+                    with(handleRequest(HttpMethod.Post, "graphql") {
+                        setBody("{ characters { id name }}")
+                    }) {
+
+                        it("should respond 200") {
+                            assertEquals(HttpStatusCode.OK, response.status())
+                        }
                     }
                 }
 
@@ -74,10 +95,22 @@ object ApplicationTest : Spek({
     }
 })
 
-private fun Application.stubEnvironment(){
+private fun Application.stubEnvironment() {
     (environment.config as MapApplicationConfig).run {
         put("ktor.marvel_gateway_url", "")
         put("ktor.marvel_gateway_key.public", "")
         put("ktor.marvel_gateway_key.private", "")
+    }
+}
+
+private fun TestApplicationEngine.forceProductionEnvironment() {
+    (environment.config as MapApplicationConfig).run {
+        put("ktor.environment", "prod")
+    }
+}
+
+private fun TestApplicationEngine.forceDevelpmentEnvironment() {
+    (environment.config as MapApplicationConfig).run {
+        put("ktor.environment", "dev")
     }
 }
