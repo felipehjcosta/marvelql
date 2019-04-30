@@ -32,13 +32,12 @@ reference:
       paths:
       - ~/.gradle/caches
       - ~/.gradle/wrapper
-      - ~/.android/build-cache
 
   ## Dependencies
   download_dependencies: &download_dependencies
     run:
-      name: Download Android Dependencies
-      command: ./gradlew androidDependencies
+      name: Download Dependencies
+      command: ./gradlew dependencies
 
 jobs:
   lint:
