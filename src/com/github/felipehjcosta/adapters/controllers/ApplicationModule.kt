@@ -14,6 +14,7 @@ import io.ktor.features.StatusPages
 import io.ktor.gson.gson
 import io.ktor.http.HttpStatusCode
 import io.ktor.response.respond
+import org.koin.core.module.Module
 import org.koin.ktor.ext.installKoin
 
 fun Application.module() {
@@ -28,18 +29,34 @@ fun Application.module() {
     moduleWithDependencies(applicationModule)
 }
 
-fun Application.moduleWithDependencies(module: org.koin.core.module.Module) {
+fun Application.moduleWithDependencies(module: Module) {
+    installContentNegotiation()
+    installStatusPages()
+    installDependencyInjection(module)
+    installAuthentication()
+}
+
+private fun Application.installContentNegotiation() {
     install(ContentNegotiation) {
         gson()
     }
+}
+
+private fun Application.installStatusPages() {
     install(StatusPages) {
         exception<Throwable> {
             call.respond(HttpStatusCode.InternalServerError)
         }
     }
+}
+
+private fun Application.installDependencyInjection(module: Module) {
     installKoin {
         modules(module)
     }
+}
+
+private fun Application.installAuthentication() {
     install(Authentication) {
         basic {
             realm = "ktor"
