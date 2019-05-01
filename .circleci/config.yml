@@ -79,6 +79,7 @@ jobs:
     - *restore_gradle_cache
     - *download_dependencies
     - *save_gradle_cache
+    - setup_remote_docker
     - run:
         name: "Assemble"
         command: ./gradlew systemTest --console=plain -Dorg.gradle.parallel=false
