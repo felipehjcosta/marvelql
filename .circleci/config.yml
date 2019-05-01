@@ -9,7 +9,7 @@ reference:
   java_config: &java_config
     working_directory: *workspace
     docker:
-    - image: circleci/openjdk:8-jdk
+    - image: circleci/openjdk:8-jdk-stretch
     environment:
       JVM_OPTS: -Xmx3200m
 
