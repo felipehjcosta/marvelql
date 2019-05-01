@@ -50,7 +50,7 @@ jobs:
     - *save_gradle_cache
     - run:
         name: Run Lint
-        command: ./gradlew detekt --console=plain -Dorg.gradle.parallel=false
+        command: ./gradlew detekt --stacktrace --console=plain -Dorg.gradle.parallel=false
 
   test:
     <<: *java_config
@@ -62,7 +62,7 @@ jobs:
     - *save_gradle_cache
     - run:
         name: Run Tests
-        command: ./gradlew test --console=plain -Dorg.gradle.parallel=false
+        command: ./gradlew test --stacktrace --console=plain -Dorg.gradle.parallel=false
         no_output_timeout: 15m
     - store_artifacts: # for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
         path: app/build/reports
@@ -82,7 +82,7 @@ jobs:
     - setup_remote_docker
     - run:
         name: "Assemble"
-        command: ./gradlew systemTest --console=plain -Dorg.gradle.parallel=false
+        command: ./gradlew systemTest --stacktrace --console=plain -Dorg.gradle.parallel=false
 
 workflows:
   version: 2
